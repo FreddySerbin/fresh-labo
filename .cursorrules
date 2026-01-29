@@ -1,0 +1,408 @@
+# Fresh Lab'O - Système de Réservation
+# Règles de développement Cursor AI
+
+## 🎨 IDENTITÉ VISUELLE
+
+### Palette de couleurs
+```css
+--primary-cyan: #00BFFF;
+--primary-orange: #FF8C00;
+--dark-blue: #1A1A4D;
+--navy: #0F1035;
+--light-blue: #40E0D0;
+--accent-orange: #FFB347;
+--white: #FFFFFF;
+--gray-light: #F5F5F5;
+--gray-medium: #CCCCCC;
+--gray-dark: #666666;
+```
+
+### Typographie
+- Titre principal: 'Poppins', sans-serif (Bold 700-800)
+- Sous-titres: 'Poppins', sans-serif (SemiBold 600)
+- Texte corps: 'Inter', sans-serif (Regular 400, Medium 500)
+- Prix: 'Poppins', sans-serif (Bold 700)
+
+### Effets visuels
+- Bulles flottantes (inspiration logo Fresh Lab'O)
+- Dégradés subtils bleu-cyan
+- Ombres douces pour profondeur
+- Animations fluides et professionnelles
+- Coins arrondis (border-radius: 12px-24px)
+
+## 🏗️ ARCHITECTURE TECHNIQUE
+
+### Stack Technology
+- **Frontend**: Next.js 14+ (App Router)
+- **UI**: React 18+, TypeScript
+- **Styling**: Tailwind CSS + CSS Modules pour effets custom
+- **Animations**: Framer Motion
+- **Backend**: Next.js API Routes
+- **Database**: Supabase (PostgreSQL)
+- **Auth**: Supabase Auth
+- **Calendar**: Google Calendar API
+- **Forms**: React Hook Form + Zod validation
+- **State**: Zustand (état global léger)
+- **Payments**: Stripe (à intégrer phase 2)
+
+### Structure du projet
+```
+fresh-labo/
+├── src/
+│   ├── app/
+│   │   ├── (auth)/
+│   │   │   ├── login/
+│   │   │   └── register/
+│   │   ├── (booking)/
+│   │   │   ├── services/
+│   │   │   ├── estimate/
+│   │   │   └── confirmation/
+│   │   ├── dashboard/
+│   │   ├── api/
+│   │   │   ├── bookings/
+│   │   │   ├── calendar/
+│   │   │   └── estimates/
+│   │   └── page.tsx (landing)
+│   ├── components/
+│   │   ├── ui/ (shadcn/ui)
+│   │   ├── layout/
+│   │   ├── booking/
+│   │   └── common/
+│   ├── lib/
+│   │   ├── supabase/
+│   │   ├── calendar/
+│   │   ├── validations/
+│   │   └── utils/
+│   ├── hooks/
+│   ├── types/
+│   └── styles/
+├── public/
+│   ├── images/
+│   └── icons/
+├── supabase/
+│   ├── migrations/
+│   └── seed.sql
+└── docs/
+    └── MVP.md
+```
+
+## 📊 MODÈLE DE DONNÉES
+
+### Tables Supabase
+
+#### users (extends Supabase Auth)
+```sql
+- id (uuid, PK)
+- email (text)
+- full_name (text)
+- phone (text)
+- address (text)
+- created_at (timestamp)
+```
+
+#### services
+```sql
+- id (uuid, PK)
+- category (enum: 'matelas', 'vehicule', 'tapis', 'canape')
+- name (text)
+- description (text)
+- base_price (decimal)
+- image_url (text)
+- active (boolean)
+```
+
+#### service_options
+```sql
+- id (uuid, PK)
+- service_id (uuid, FK)
+- name (text) -- ex: "2 faces", "King size"
+- price_modifier (decimal)
+- option_type (enum: 'size', 'sides', 'vehicle_type')
+```
+
+#### bookings
+```sql
+- id (uuid, PK)
+- user_id (uuid, FK)
+- service_id (uuid, FK)
+- status (enum: 'pending', 'confirmed', 'completed', 'cancelled')
+- scheduled_date (timestamp)
+- estimated_price (decimal)
+- final_price (decimal)
+- address (text)
+- notes (text)
+- google_calendar_event_id (text)
+- created_at (timestamp)
+- updated_at (timestamp)
+```
+
+#### booking_options
+```sql
+- id (uuid, PK)
+- booking_id (uuid, FK)
+- option_id (uuid, FK)
+- quantity (integer)
+```
+
+#### estimates
+```sql
+- id (uuid, PK)
+- user_email (text)
+- service_category (text)
+- estimated_price (decimal)
+- options (jsonb)
+- expires_at (timestamp)
+- converted_to_booking (boolean)
+- created_at (timestamp)
+```
+
+## 🎯 RÈGLES DE DÉVELOPPEMENT
+
+### Code Quality
+1. **TypeScript strict mode** activé
+2. **Pas de any types** - toujours typer explicitement
+3. **ESLint + Prettier** configurés
+4. **Composants fonctionnels** uniquement (pas de class components)
+5. **Props destructurées** dès la déclaration
+6. **Custom hooks** pour logique réutilisable
+7. **Error boundaries** pour gestion erreurs
+8. **Loading states** pour chaque action async
+
+### Composants
+```tsx
+// Template de composant
+import { FC } from 'react';
+import { motion } from 'framer-motion';
+
+interface ComponentProps {
+  title: string;
+  // ... autres props
+}
+
+export const Component: FC<ComponentProps> = ({ title, ...props }) => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="..."
+    >
+      {/* Contenu */}
+    </motion.div>
+  );
+};
+```
+
+### API Routes
+```tsx
+// Template API route
+import { NextResponse } from 'next/server';
+import { createServerClient } from '@/lib/supabase/server';
+
+export async function POST(request: Request) {
+  try {
+    const supabase = createServerClient();
+    const body = await request.json();
+    
+    // Validation
+    // Logic
+    
+    return NextResponse.json({ success: true, data: ... });
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Message erreur' },
+      { status: 500 }
+    );
+  }
+}
+```
+
+### Validation
+```tsx
+// Utiliser Zod pour toute validation
+import { z } from 'zod';
+
+const bookingSchema = z.object({
+  serviceId: z.string().uuid(),
+  date: z.string().datetime(),
+  address: z.string().min(10),
+  // ...
+});
+```
+
+## 🎨 GUIDELINES UI/UX
+
+### Animations
+- **Page transitions**: fade + slide (300ms)
+- **Hover effects**: scale(1.02) + shadow
+- **Loading**: spinner cyan avec animation pulse
+- **Success**: checkmark animé avec confetti subtil
+- **Formulaires**: focus avec border cyan + shadow glow
+
+### Responsive
+- Mobile-first approach
+- Breakpoints: 640px (sm), 768px (md), 1024px (lg), 1280px (xl)
+- Touch-friendly (min 44px pour boutons)
+
+### Accessibilité
+- Labels pour tous les inputs
+- ARIA attributes appropriés
+- Contraste WCAG AA minimum
+- Navigation clavier complète
+- Focus visible
+
+### Messages utilisateur
+- Français professionnel
+- Ton friendly mais expert
+- "Vous" (vouvoiement)
+- Emojis légers (✅ ❌ 🧼 🚗 etc.)
+
+## 🔐 SÉCURITÉ
+
+1. **Authentification**: Middleware Next.js pour routes protégées
+2. **Validation**: Server-side pour toutes entrées
+3. **Rate limiting**: 10 requêtes/minute par IP
+4. **CSRF protection**: Tokens pour formulaires
+5. **Sanitization**: Toutes entrées utilisateur
+6. **Environment variables**: Jamais exposées côté client
+7. **RLS Supabase**: Policies strictes
+
+## 📱 INTÉGRATION GOOGLE CALENDAR
+
+### Setup
+```typescript
+// lib/calendar/client.ts
+import { google } from 'googleapis';
+
+const oauth2Client = new google.auth.OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  process.env.GOOGLE_REDIRECT_URI
+);
+
+const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
+```
+
+### Fonctionnalités
+1. Créer event lors de confirmation booking
+2. Envoyer invitations automatiques
+3. Sync bidirectionnel (update/cancel)
+4. Afficher disponibilités en temps réel
+5. Reminders 24h et 2h avant
+
+## 🚀 MVP - PHASE 1
+
+### Fonctionnalités essentielles
+✅ Landing page attractive
+✅ Sélection service (4 catégories)
+✅ Configurateur avec options
+✅ Calcul estimation instantané
+✅ Formulaire réservation
+✅ Intégration Google Calendar
+✅ Confirmation par email
+✅ Page "Mes réservations" (basique)
+
+### À EXCLURE du MVP
+❌ Paiement en ligne (Stripe)
+❌ Dashboard admin complet
+❌ Chat support
+❌ Système de reviews
+❌ Programme fidélité
+❌ App mobile
+❌ Multi-langue
+
+## 🧪 TESTING
+
+### Tests à implémenter
+- Unit tests (Vitest): Fonctions calcul prix
+- Integration tests: API routes
+- E2E tests (Playwright): Parcours réservation complet
+- Accessibilité (axe-core)
+
+### Coverage minimum
+- 80% pour fonctions métier
+- 60% global
+
+## 📝 DOCUMENTATION
+
+### Code
+- JSDoc pour fonctions complexes
+- README.md avec setup instructions
+- CHANGELOG.md
+
+### API
+- Swagger/OpenAPI pour endpoints
+- Exemples requêtes/réponses
+
+## 🎯 PERFORMANCE
+
+### Objectifs
+- First Contentful Paint: < 1.5s
+- Time to Interactive: < 3s
+- Lighthouse score: > 90
+- Bundle size: < 200KB (initial)
+
+### Optimisations
+- Image optimization (next/image)
+- Code splitting
+- Lazy loading
+- Static generation où possible
+- CDN pour assets
+
+## 🔄 GIT WORKFLOW
+
+### Branches
+- `main`: Production
+- `develop`: Development
+- `feature/*`: Nouvelles fonctionnalités
+- `fix/*`: Bug fixes
+
+### Commits
+Format: `type(scope): message`
+- feat: Nouvelle fonctionnalité
+- fix: Bug fix
+- docs: Documentation
+- style: Formatting
+- refactor: Refactoring
+- test: Tests
+- chore: Maintenance
+
+Exemple: `feat(booking): add calendar integration`
+
+## 🌟 PROCHAINES PHASES
+
+### Phase 2 - Paiement & Admin
+- Intégration Stripe
+- Dashboard admin complet
+- Gestion stocks produits
+- Rapports & analytics
+- Notifications push
+
+### Phase 3 - Expérience client
+- Programme fidélité
+- Reviews & ratings
+- Chat support temps réel
+- Blog & conseils
+- App mobile (React Native)
+
+### Phase 4 - Scaling
+- Multi-locataires
+- API publique
+- Intégrations tierces
+- IA pour optimisation planning
+- Tracking flotte véhicules
+
+---
+
+## 🚨 RÈGLES ABSOLUES
+
+1. **JAMAIS** commit de credentials
+2. **TOUJOURS** valider côté serveur
+3. **JAMAIS** de données sensibles en localStorage
+4. **TOUJOURS** tester responsive mobile
+5. **JAMAIS** de code mort (commented code)
+6. **TOUJOURS** gérer les erreurs gracefully
+7. **RESPECT STRICT** du branding Fresh Lab'O
+
+---
+
+Ces règles sont le contrat de développement. Cursor AI doit les respecter scrupuleusement pour maintenir la qualité, la cohérence et la sécurité du projet Fresh Lab'O.
