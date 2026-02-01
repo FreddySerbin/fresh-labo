@@ -166,7 +166,7 @@ CREATE TABLE public.estimates (
 -- ============================================
 
 -- Users
-CREATE INDEX idx_users_email ON public.users((auth.email()));
+-- Note: auth.email() cannot be indexed as it's not IMMUTABLE
 CREATE INDEX idx_users_phone ON public.users(phone);
 
 -- Services

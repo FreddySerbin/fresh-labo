@@ -1,0 +1,374 @@
+'use client'
+
+import { useAuth } from '@/contexts/AuthContext'
+import { Button } from '@/components/ui/Button'
+import Link from 'next/link'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Calendar, Clock, MapPin, Plus, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react'
+import { format } from 'date-fns'
+import { fr } from 'date-fns/locale'
+import { toast } from 'sonner'
+import { StatsSection } from '@/components/dashboard/StatsSection'
+import { FadeIn } from '@/components/common/FadeIn'
+import { motion } from 'framer-motion'
+
+interface Booking {
+  id: string
+  booking_number: string
+  scheduled_date: string
+  scheduled_time_slot: string
+  estimated_price: number
+  status: 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled'
+  address: string
+  city: string
+  service: {
+    name: string
+    category: string
+    icon: string
+  }
+}
+
+export default function DashboardPage() {
+  const { user, loading: authLoading, signOut } = useAuth()
+  const router = useRouter()
+  const [bookings, setBookings] = useState<Booking[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/auth/login')
+    } else if (user) {
+      fetchBookings()
+    }
+  }, [user, authLoading, router])
+
+  const fetchBookings = async () => {
+    try {
+      const response = await fetch('/api/bookings')
+      const data = await response.json()
+
+      if (data.success) {
+        setBookings(data.bookings || [])
+      } else {
+        toast.error('Erreur lors du chargement des réservations')
+      }
+    } catch (error) {
+      console.error('Fetch bookings error:', error)
+      toast.error('Erreur de connexion')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      pending: { label: 'En attente', color: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
+      confirmed: { label: 'Confirmée', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+      in_progress: { label: 'En cours', color: 'bg-blue-100 text-blue-800', icon: Clock },
+      completed: { label: 'Terminée', color: 'bg-gray-100 text-gray-800', icon: CheckCircle },
+      cancelled: { label: 'Annulée', color: 'bg-red-100 text-red-800', icon: XCircle },
+    }
+
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.pending
+    const Icon = config.icon
+
+    return (
+      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium ${config.color}`}>
+        <Icon className="w-4 h-4" />
+        {config.label}
+      </span>
+    )
+  }
+
+  if (authLoading || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 text-primary-cyan mx-auto animate-spin" />
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return null
+  }
+
+  const upcomingBookings = bookings.filter(b => 
+    ['pending', 'confirmed'].includes(b.status) && 
+    new Date(b.scheduled_date) >= new Date()
+  )
+  const pastBookings = bookings.filter(b => 
+    b.status === 'completed' || 
+    (new Date(b.scheduled_date) < new Date() && !['pending', 'confirmed'].includes(b.status))
+  )
+
+  // Calculate statistics
+  const stats = {
+    totalBookings: bookings.length,
+    upcomingBookings: upcomingBookings.length,
+    completedBookings: bookings.filter(b => b.status === 'completed').length,
+    totalSpent: bookings
+      .filter(b => b.status === 'completed')
+      .reduce((sum, b) => sum + (b.estimated_price || 0), 0),
+    averagePrice: bookings.length > 0
+      ? Math.round(bookings.reduce((sum, b) => sum + (b.estimated_price || 0), 0) / bookings.length)
+      : 0,
+    cancelledBookings: bookings.filter(b => b.status === 'cancelled').length,
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-primary-cyan/10 via-white to-primary-orange/10">
+      {/* Header */}
+      <header className="bg-white shadow-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/" className="text-heading-2 font-poppins font-bold text-primary-cyan">
+              Fresh Lab'O
+            </Link>
+            <div className="flex items-center gap-4">
+              <span className="text-body text-gray-600 hidden sm:inline">
+                {user.email}
+              </span>
+              <Link href="/booking">
+                <Button variant="primary" className="flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Nouvelle réservation
+                </Button>
+              </Link>
+              <Button variant="secondary" onClick={signOut}>
+                Déconnexion
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-12">
+        <div className="max-w-6xl mx-auto">
+          <FadeIn>
+            <div className="mb-8">
+              <h1 className="text-4xl font-poppins font-bold text-dark-blue mb-2">
+                Mes Réservations
+              </h1>
+              <p className="text-gray-600">
+                Gérez vos interventions Fresh Lab'O
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* Enhanced Stats Section */}
+          {bookings.length > 0 && <StatsSection stats={stats} />}
+
+          {/* Quick Stats (kept for immediate visibility) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total</p>
+                  <p className="text-3xl font-bold text-gray-900">{bookings.length}</p>
+                </div>
+                <div className="bg-primary-cyan/10 p-4 rounded-full">
+                  <Calendar className="w-8 h-8 text-primary-cyan" />
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">À venir</p>
+                  <p className="text-3xl font-bold text-primary-cyan">{upcomingBookings.length}</p>
+                </div>
+                <div className="bg-green-100 p-4 rounded-full">
+                  <Clock className="w-8 h-8 text-green-600" />
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Terminées</p>
+                  <p className="text-3xl font-bold text-gray-900">{pastBookings.length}</p>
+                </div>
+                <div className="bg-gray-100 p-4 rounded-full">
+                  <CheckCircle className="w-8 h-8 text-gray-600" />
+                </div>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Bookings List */}
+          {bookings.length === 0 ? (
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.4 }}
+              className="bg-white rounded-2xl shadow-lg p-12 text-center"
+            >
+              <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Aucune réservation
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Vous n'avez pas encore de réservation. Commencez par réserver un service !
+              </p>
+              <Link href="/booking">
+                <Button variant="primary" className="inline-flex items-center gap-2">
+                  <Plus className="w-5 h-5" />
+                  Créer une réservation
+                </Button>
+              </Link>
+            </motion.div>
+          ) : (
+            <div className="space-y-6">
+              {/* Upcoming Bookings */}
+              {upcomingBookings.length > 0 && (
+                <div>
+                  <FadeIn>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      Réservations à venir ({upcomingBookings.length})
+                    </h2>
+                  </FadeIn>
+                  <div className="space-y-4">
+                    {upcomingBookings.map((booking, index) => (
+                      <motion.div 
+                        key={booking.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        whileHover={{ scale: 1.01 }}
+                        className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-4">
+                            <div className="text-5xl">{booking.service.icon}</div>
+                            <div>
+                              <h3 className="text-xl font-semibold text-gray-900">{booking.service.name}</h3>
+                              <p className="text-sm text-gray-600">N° {booking.booking_number}</p>
+                            </div>
+                          </div>
+                          {getStatusBadge(booking.status)}
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Calendar className="w-4 h-4 text-primary-cyan" />
+                            <span>{format(new Date(booking.scheduled_date), 'd MMMM yyyy', { locale: fr })}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Clock className="w-4 h-4 text-primary-cyan" />
+                            <span>{booking.scheduled_time_slot === 'morning' ? 'Matin (8h-12h)' : 'Après-midi (14h-18h)'}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <MapPin className="w-4 h-4 text-primary-cyan" />
+                            <span>{booking.city}</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                          <div className="text-lg font-bold text-primary-cyan">
+                            {booking.estimated_price}€
+                          </div>
+                          <Link href={`/dashboard/bookings/${booking.id}`}>
+                            <Button variant="secondary" size="sm">
+                              Voir les détails
+                            </Button>
+                          </Link>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Past Bookings */}
+              {pastBookings.length > 0 && (
+                <div>
+                  <FadeIn>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-4">
+                      Historique ({pastBookings.length})
+                    </h2>
+                  </FadeIn>
+                  <div className="space-y-4">
+                    {pastBookings.map((booking, index) => (
+                      <motion.div 
+                        key={booking.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 0.75, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                        whileHover={{ opacity: 1, scale: 1.01 }}
+                        className="bg-white rounded-xl shadow p-6 transition-all"
+                      >
+                        <div className="flex items-start justify-between mb-4">
+                          <div className="flex items-center gap-4">
+                            <div className="text-4xl">{booking.service.icon}</div>
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900">{booking.service.name}</h3>
+                              <p className="text-sm text-gray-600">N° {booking.booking_number}</p>
+                            </div>
+                          </div>
+                          {getStatusBadge(booking.status)}
+                        </div>
+
+                        <div className="flex items-center justify-between text-sm">
+                          <div className="flex items-center gap-2 text-gray-600">
+                            <Calendar className="w-4 h-4" />
+                            <span>{format(new Date(booking.scheduled_date), 'd MMM yyyy', { locale: fr })}</span>
+                          </div>
+                          <div className="flex items-center gap-3">
+                            <div className="text-lg font-bold text-gray-900">
+                              {booking.estimated_price}€
+                            </div>
+                            <Link href={`/dashboard/bookings/${booking.id}`}>
+                              <Button variant="secondary" size="sm">
+                                Détails
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Quick Actions */}
+          <div className="mt-8 flex flex-col sm:flex-row gap-4">
+            <Link href="/" className="flex-1">
+              <Button variant="secondary" className="w-full">
+                ← Retour à l'accueil
+              </Button>
+            </Link>
+            <Link href="/services" className="flex-1">
+              <Button variant="secondary" className="w-full">
+                Voir nos services
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}
