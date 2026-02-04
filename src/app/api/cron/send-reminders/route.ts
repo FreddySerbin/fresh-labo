@@ -111,7 +111,7 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/cron/send-reminders (for testing)
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   return NextResponse.json({
     message: 'This endpoint should be called with POST method by a cron job',
     info: 'Set up a daily cron job to call this endpoint',

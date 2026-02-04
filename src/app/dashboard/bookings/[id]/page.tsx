@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
 import Link from 'next/link'
+import { Logo } from '@/components/common/Logo'
 import { 
   Calendar, Clock, MapPin, Phone, Mail, User, FileText, 
   ArrowLeft, Loader2, AlertTriangle, Edit, X, CheckCircle,
@@ -268,14 +269,12 @@ export default function BookingDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-cyan/10 via-white to-primary-orange/10">
+    <div className="min-h-screen bg-gradient-to-br from-dark-navy via-dark-blue to-dark-navy">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-dark-navy shadow-sm shadow-primary-cyan/10">
+        <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-heading-2 font-poppins font-bold text-primary-cyan">
-              Fresh Lab'O
-            </Link>
+            <Logo width={200} height={80} className="h-16 w-auto" />
             <Link href="/dashboard">
               <Button variant="secondary" className="flex items-center gap-2">
                 <ArrowLeft className="w-5 h-5" />
@@ -290,18 +289,18 @@ export default function BookingDetailPage() {
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-4xl mx-auto">
           {/* Header Section */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <div className="bg-dark-blue/50 border border-primary-cyan/30 rounded-2xl shadow-lg shadow-primary-cyan/10 p-8 mb-6">
             <div className="flex items-start justify-between mb-6">
               <div className="flex items-center gap-6">
                 <div className="text-7xl">{booking.service.icon}</div>
                 <div>
-                  <h1 className="text-3xl font-poppins font-bold text-gray-900 mb-2">
+                  <h1 className="text-3xl font-poppins font-bold text-white mb-2">
                     {booking.service.name}
                   </h1>
-                  <p className="text-lg text-gray-600 mb-2">
+                  <p className="text-lg text-white/80 mb-2">
                     N° de réservation : <span className="font-semibold text-primary-cyan">{booking.booking_number}</span>
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-white/60">
                     Créée le {format(new Date(booking.created_at), 'd MMMM yyyy à HH:mm', { locale: fr })}
                   </p>
                 </div>
@@ -311,7 +310,7 @@ export default function BookingDetailPage() {
 
             {/* Service Description */}
             {booking.service.description && (
-              <p className="text-gray-600 mb-4 pb-4 border-b">
+              <p className="text-white/70 mb-4 pb-4 border-b border-primary-cyan/20">
                 {booking.service.description}
               </p>
             )}
@@ -383,27 +382,27 @@ export default function BookingDetailPage() {
           {/* Details Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             {/* Date & Time */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-dark-blue/50 border border-primary-cyan/30 rounded-xl shadow-lg shadow-primary-cyan/10 p-6">
+              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <Calendar className="w-6 h-6 text-primary-cyan" />
                 Date et Heure
               </h2>
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Date d'intervention</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-white/60 mb-1">Date d'intervention</p>
+                  <p className="text-lg font-semibold text-white">
                     {format(new Date(booking.scheduled_date), 'EEEE d MMMM yyyy', { locale: fr })}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Créneau horaire</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-white/60 mb-1">Créneau horaire</p>
+                  <p className="text-lg font-semibold text-white">
                     {booking.scheduled_time_slot === 'morning' ? 'Matin (8h-12h)' : 'Après-midi (14h-18h)'}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Durée estimée</p>
-                  <p className="text-lg font-semibold text-gray-900">
+                  <p className="text-sm text-white/60 mb-1">Durée estimée</p>
+                  <p className="text-lg font-semibold text-white">
                     {booking.service.estimated_duration} minutes
                   </p>
                 </div>
@@ -411,21 +410,21 @@ export default function BookingDetailPage() {
             </div>
 
             {/* Location */}
-            <div className="bg-white rounded-xl shadow-lg p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <div className="bg-dark-blue/50 border border-primary-cyan/30 rounded-xl shadow-lg shadow-primary-cyan/10 p-6">
+              <h2 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
                 <MapPin className="w-6 h-6 text-primary-cyan" />
                 Adresse d'intervention
               </h2>
               <div className="space-y-2">
-                <p className="text-lg text-gray-900">{booking.address}</p>
-                <p className="text-lg text-gray-900">{booking.postal_code} {booking.city}</p>
+                <p className="text-lg text-white">{booking.address}</p>
+                <p className="text-lg text-white">{booking.postal_code} {booking.city}</p>
                 {booking.floor && (
-                  <p className="text-sm text-gray-600">Étage : {booking.floor}</p>
+                  <p className="text-sm text-white/70">Étage : {booking.floor}</p>
                 )}
                 {booking.access_code && (
-                  <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-600 mb-1">Code d'accès</p>
-                    <p className="text-lg font-mono font-semibold text-gray-900">{booking.access_code}</p>
+                  <div className="mt-3 p-3 bg-dark-navy/50 border border-primary-cyan/20 rounded-lg">
+                    <p className="text-sm text-white/60 mb-1">Code d'accès</p>
+                    <p className="text-lg font-mono font-semibold text-primary-cyan">{booking.access_code}</p>
                   </div>
                 )}
               </div>

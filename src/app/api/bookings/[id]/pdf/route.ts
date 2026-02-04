@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { generateBookingPDF } from '@/lib/pdf/generateBookingPDF';
 
 export const dynamic = 'force-dynamic';
@@ -9,11 +9,11 @@ export const dynamic = 'force-dynamic';
  * Generate and download PDF for a booking
  */
 export async function GET(
-  request: NextRequest,
+  _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const supabase = createServerClient();
+    const supabase = createServerSupabaseClient();
     const bookingId = params.id;
 
     // Get current user

@@ -19,7 +19,7 @@ export function StatsSection({ stats }: StatsSectionProps) {
   return (
     <div className="mb-12">
       <FadeIn>
-        <h2 className="text-2xl font-poppins font-bold text-dark-blue mb-6">
+        <h2 className="text-2xl font-poppins font-bold text-white mb-6">
           📊 Vos statistiques
         </h2>
       </FadeIn>

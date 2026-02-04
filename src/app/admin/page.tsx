@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from '@/components/ui/Button'
+import { Logo } from '@/components/common/Logo'
 import Link from 'next/link'
 import { 
   Calendar, Clock, MapPin, Loader2, CheckCircle, XCircle, AlertTriangle,
-  TrendingUp, DollarSign, Package, Users, Filter, Search, ArrowLeft, Eye
+  DollarSign, Filter, Search, ArrowLeft, Eye
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -193,16 +194,20 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-cyan/10 via-white to-primary-orange/10">
+    <div className="min-h-screen bg-gradient-to-br from-dark-navy via-dark-blue to-dark-navy">
       {/* Header */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4">
+      <header className="bg-dark-navy shadow-sm shadow-primary-cyan/10">
+        <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-heading-2 font-poppins font-bold text-primary-cyan">
-              Fresh Lab'O - Admin
-            </Link>
+            <Logo 
+              width={200} 
+              height={80} 
+              className="h-16 w-auto" 
+              showText={true}
+              textSuffix="Admin"
+            />
             <div className="flex items-center gap-4">
-              <span className="text-body text-gray-600 hidden sm:inline">
+              <span className="text-body text-white/80 hidden sm:inline">
                 {user.email}
               </span>
               <Link href="/dashboard">

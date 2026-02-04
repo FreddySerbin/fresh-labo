@@ -37,6 +37,7 @@ export const Button: FC<ButtonProps> = ({
   };
   
   return (
+    // @ts-expect-error - Framer motion type conflict with HTML button props
     <motion.button
       whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
       whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}

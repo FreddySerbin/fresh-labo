@@ -40,10 +40,10 @@ export function generateBookingPDF(booking: BookingPDFData): jsPDF {
   const doc = new jsPDF();
   
   // Configuration des couleurs Fresh Lab'O
-  const primaryCyan = [0, 191, 255];
-  const primaryOrange = [255, 140, 0];
-  const darkBlue = [26, 26, 77];
-  const gray = [107, 114, 128];
+  const primaryCyan = [0, 191, 255] as const;
+  const primaryOrange = [255, 140, 0] as const;
+  const darkBlue = [26, 26, 77] as const;
+  const gray = [107, 114, 128] as const;
   
   let yPos = 20;
   

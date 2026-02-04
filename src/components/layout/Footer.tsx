@@ -3,6 +3,7 @@
 import { FC } from 'react';
 import Link from 'next/link';
 import { Phone, Mail, MapPin } from 'lucide-react';
+import { Logo } from '@/components/common/Logo';
 
 export const Footer: FC = () => {
   return (
@@ -11,9 +12,7 @@ export const Footer: FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo & Description */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-poppins font-bold text-gradient-fresh">
-              Fresh Lab'O
-            </h3>
+            <Logo width={160} height={53} className="h-10 w-auto" href="/" />
             <p className="text-gray-400 text-sm">
               Service de nettoyage professionnel pour matelas, véhicules, tapis et
               canapés.

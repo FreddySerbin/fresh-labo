@@ -56,7 +56,7 @@ const config: Config = {
         "float": "float 3s ease-in-out infinite",
         "float-delayed": "float 3s ease-in-out 1s infinite",
         "bubble": "bubble 4s ease-in-out infinite",
-        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
         "shimmer": "shimmer 2s linear infinite",
       },
       keyframes: {

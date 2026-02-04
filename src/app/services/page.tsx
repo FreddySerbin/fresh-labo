@@ -30,7 +30,6 @@ const services = [
     ],
     duration: '45-90 min',
     href: '/services/matelas',
-    color: 'from-blue-500 to-cyan-400',
   },
   {
     id: 'vehicules',
@@ -51,7 +50,6 @@ const services = [
     ],
     duration: '60-90 min',
     href: '/services/vehicules',
-    color: 'from-cyan-500 to-teal-400',
   },
   {
     id: 'tapis',
@@ -72,7 +70,6 @@ const services = [
     ],
     duration: '30-60 min',
     href: '/services/tapis',
-    color: 'from-teal-500 to-emerald-400',
   },
   {
     id: 'canapes',
@@ -93,7 +90,6 @@ const services = [
     ],
     duration: '30-90 min',
     href: '/services/canapes',
-    color: 'from-orange-500 to-amber-400',
   },
 ];
 
@@ -101,15 +97,20 @@ export default function ServicesPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-white">
+      <main className="min-h-screen bg-dark-navy">
         {/* Hero Section */}
-        <section className="bg-gradient-dark text-white py-20">
-          <div className="container mx-auto px-4">
+        <section className="bg-gradient-to-br from-dark-navy via-dark-blue to-dark-navy text-white py-20 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <div className="absolute top-20 left-10 w-72 h-72 bg-primary-cyan/20 rounded-full blur-3xl animate-pulse-slow" />
+            <div className="absolute bottom-20 right-10 w-96 h-96 bg-primary-orange/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }} />
+          </div>
+          
+          <div className="container mx-auto px-4 relative z-10">
             <div className="max-w-4xl mx-auto text-center">
-              <h1 className="text-display-small md:text-display-medium font-poppins font-bold mb-6">
-                Nos Services de Nettoyage Professionnel
+              <h1 className="text-4xl md:text-6xl font-poppins font-bold mb-6">
+                Nos Services de Nettoyage <span className="text-gradient-fresh">Professionnel</span>
               </h1>
-              <p className="text-body-large text-gray-300 mb-8">
+              <p className="text-xl text-white/80 mb-8">
                 Un nettoyage professionnel adapté à chaque besoin.
                 Tarifs transparents, intervention rapide, résultats garantis.
               </p>
@@ -130,7 +131,7 @@ export default function ServicesPage() {
                 >
                   {/* Image/Icon */}
                   <div className="lg:w-1/3">
-                    <div className={`relative h-64 rounded-3xl bg-gradient-to-br ${service.color} flex items-center justify-center overflow-hidden`}>
+                    <div className="relative h-64 rounded-3xl bg-gradient-to-br from-primary-cyan/20 to-primary-orange/20 border-2 border-primary-cyan/30 flex items-center justify-center overflow-hidden shadow-lg shadow-primary-cyan/10 hover:shadow-xl hover:shadow-primary-cyan/20 transition-all">
                       <span className="text-9xl filter drop-shadow-lg">
                         {service.emoji}
                       </span>
@@ -140,10 +141,10 @@ export default function ServicesPage() {
                   {/* Content */}
                   <div className="lg:w-2/3 space-y-6">
                     <div>
-                      <h2 className="text-display-small text-dark-blue font-poppins font-bold mb-4">
+                      <h2 className="text-4xl text-white font-poppins font-bold mb-4">
                         {service.name}
                       </h2>
-                      <p className="text-body-large text-gray-600">
+                      <p className="text-lg text-white/70">
                         {service.description}
                       </p>
                     </div>
@@ -152,36 +153,36 @@ export default function ServicesPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {service.features.map((feature) => (
                         <div key={feature} className="flex items-center gap-2">
-                          <CheckCircle className="w-5 h-5 text-success flex-shrink-0" />
-                          <span className="text-body text-gray-700">{feature}</span>
+                          <CheckCircle className="w-5 h-5 text-primary-cyan flex-shrink-0" />
+                          <span className="text-white/80">{feature}</span>
                         </div>
                       ))}
                     </div>
 
                     {/* Prices */}
-                    <div className="bg-gray-50 rounded-2xl p-6">
+                    <div className="bg-dark-blue/50 border border-primary-cyan/30 rounded-2xl p-6 shadow-lg shadow-primary-cyan/10">
                       <div className="flex items-center gap-2 mb-4">
-                        <span className="text-heading-3 font-poppins font-bold text-dark-blue">
+                        <span className="text-2xl font-poppins font-bold text-white">
                           Tarifs
                         </span>
-                        <Clock className="w-5 h-5 text-gray-500" />
-                        <span className="text-body-small text-gray-600">{service.duration}</span>
+                        <Clock className="w-5 h-5 text-primary-cyan" />
+                        <span className="text-sm text-white/60">{service.duration}</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         {service.prices.map((price) => (
-                          <div key={price.name} className="text-center">
-                            <div className="text-heading-1 text-primary-orange font-poppins font-bold">
+                          <div key={price.name} className="text-center bg-dark-navy/50 rounded-xl p-4 border border-primary-cyan/20">
+                            <div className="text-3xl text-primary-cyan font-poppins font-bold">
                               {price.price}€
                             </div>
-                            <div className="text-body-small text-gray-600">{price.name}</div>
+                            <div className="text-sm text-white/60 mt-1">{price.name}</div>
                           </div>
                         ))}
                       </div>
                     </div>
 
                     {/* CTA */}
-                    <Link href="/booking/estimate">
-                      <Button variant="primary" size="lg" className="group">
+                    <Link href="/booking">
+                      <Button variant="primary" size="lg" className="group bg-primary-cyan hover:bg-primary-cyan/90">
                         Réserver ce service
                         <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
                       </Button>
@@ -194,19 +195,19 @@ export default function ServicesPage() {
         </section>
 
         {/* CTA Section */}
-        <section className="bg-gradient-fresh text-white py-16">
+        <section className="bg-gradient-to-r from-primary-cyan/10 to-primary-orange/10 border-y border-primary-cyan/30 py-16">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-display-small font-poppins font-bold mb-6">
+            <h2 className="text-4xl font-poppins font-bold text-white mb-6">
               Besoin d'un devis personnalisé ?
             </h2>
-            <p className="text-body-large mb-8 text-white/90">
+            <p className="text-xl text-white/80 mb-8">
               Obtenez une estimation instantanée et réservez en quelques clics
             </p>
-            <Link href="/booking/estimate">
+            <Link href="/booking">
               <Button 
-                variant="secondary" 
+                variant="primary" 
                 size="lg"
-                className="bg-white text-primary-cyan hover:bg-primary-orange hover:text-white"
+                className="bg-primary-cyan hover:bg-primary-cyan/90 shadow-glow-cyan"
               >
                 Obtenir mon devis gratuit
                 <ArrowRight className="ml-2" />

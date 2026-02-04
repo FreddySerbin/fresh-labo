@@ -3,7 +3,6 @@
 import { motion } from 'framer-motion'
 import { LucideIcon } from 'lucide-react'
 import { AnimatedCounter } from '@/components/common/AnimatedCounter'
-import { ReactNode } from 'react'
 
 interface StatCardProps {
   icon: LucideIcon
@@ -22,40 +21,40 @@ interface StatCardProps {
 
 const colorClasses = {
   cyan: {
-    bg: 'bg-primary-cyan/10',
+    bg: 'bg-primary-cyan/20',
     icon: 'text-primary-cyan',
     text: 'text-primary-cyan',
-    border: 'border-primary-cyan/20',
+    border: 'border-primary-cyan/30',
   },
   orange: {
-    bg: 'bg-primary-orange/10',
+    bg: 'bg-primary-orange/20',
     icon: 'text-primary-orange',
     text: 'text-primary-orange',
-    border: 'border-primary-orange/20',
+    border: 'border-primary-orange/30',
   },
   green: {
-    bg: 'bg-green-100',
-    icon: 'text-green-600',
-    text: 'text-green-600',
-    border: 'border-green-200',
+    bg: 'bg-green-500/20',
+    icon: 'text-green-400',
+    text: 'text-green-400',
+    border: 'border-green-500/30',
   },
   gray: {
-    bg: 'bg-gray-100',
-    icon: 'text-gray-600',
-    text: 'text-gray-900',
-    border: 'border-gray-200',
+    bg: 'bg-white/10',
+    icon: 'text-white/70',
+    text: 'text-white',
+    border: 'border-white/20',
   },
   blue: {
-    bg: 'bg-blue-100',
-    icon: 'text-blue-600',
-    text: 'text-blue-600',
-    border: 'border-blue-200',
+    bg: 'bg-blue-500/20',
+    icon: 'text-blue-400',
+    text: 'text-blue-400',
+    border: 'border-blue-500/30',
   },
   purple: {
-    bg: 'bg-purple-100',
-    icon: 'text-purple-600',
-    text: 'text-purple-600',
-    border: 'border-purple-200',
+    bg: 'bg-purple-500/20',
+    icon: 'text-purple-400',
+    text: 'text-purple-400',
+    border: 'border-purple-500/30',
   },
 }
 
@@ -83,10 +82,10 @@ export function StatCard({
       }}
       className={`
         relative overflow-hidden
-        bg-white rounded-xl shadow-lg 
+        bg-dark-blue/50 rounded-xl shadow-lg shadow-primary-cyan/10
         border-2 ${colors.border}
         p-6 
-        hover:shadow-xl transition-shadow
+        hover:shadow-xl hover:shadow-primary-cyan/20 transition-all
       `}
     >
       {/* Background decoration */}
@@ -113,7 +112,7 @@ export function StatCard({
           )}
         </div>
 
-        <p className="text-sm text-gray-600 mb-2">{label}</p>
+        <p className="text-sm text-white/70 mb-2">{label}</p>
         
         <div className={`text-3xl font-bold ${colors.text}`}>
           <AnimatedCounter
@@ -129,7 +128,7 @@ export function StatCard({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: delay + 0.3 }}
-            className="text-xs text-gray-500 mt-2"
+            className="text-xs text-white/50 mt-2"
           >
             {subtext}
           </motion.p>

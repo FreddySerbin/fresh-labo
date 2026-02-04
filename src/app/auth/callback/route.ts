@@ -17,10 +17,10 @@ export async function GET(request: Request) {
           get(name: string) {
             return cookieStore.get(name)?.value
           },
-          set(name: string, value: string, options: any) {
-            cookieStore.set(name, value, options)
+          set(name: string, value: string, _options: any) {
+            cookieStore.set(name, value, _options)
           },
-          remove(name: string, options: any) {
+          remove(name: string, _options: any) {
             cookieStore.delete(name)
           },
         },

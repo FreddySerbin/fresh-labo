@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase/server';
+import { createServerSupabaseClient } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -7,9 +7,9 @@ export const dynamic = 'force-dynamic';
  * GET /api/admin/stats
  * Get user booking statistics
  */
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
-    const supabase = createServerClient();
+    const supabase = createServerSupabaseClient();
 
     // Check authentication
     const {
@@ -88,7 +88,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Service distribution (would need a join query in production)
-    const { data: servicesData, error: servicesError } = await supabase
+    const { data: servicesData, error: _servicesError } = await supabase
       .from('bookings')
       .select('service_id, services(name, category)')
       .eq('user_id', user.id);

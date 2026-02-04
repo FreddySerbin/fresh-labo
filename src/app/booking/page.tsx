@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'sonner'
 import { Calendar, Clock, MapPin, FileText, ArrowRight, Check, Loader2 } from 'lucide-react'
-import { format, addDays, isBefore, startOfDay } from 'date-fns'
+import { format, addDays, startOfDay } from 'date-fns'
 import { fr } from 'date-fns/locale'
 
 interface Service {

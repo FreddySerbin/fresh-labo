@@ -5,7 +5,7 @@ import { googleCalendarService } from '@/lib/google-calendar/client'
 
 // GET - Récupérer les détails d'une réservation spécifique
 export async function GET(
-  request: Request,
+  _request: Request,
   { params }: { params: { id: string } }
 ) {
   try {

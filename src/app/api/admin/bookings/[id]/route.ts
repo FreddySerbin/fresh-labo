@@ -22,7 +22,7 @@ export async function PATCH(
 
     const bookingId = params.id
     const body = await request.json()
-    const { status, final_price, notes } = body
+    const { status, final_price } = body
 
     // Valider le statut
     const validStatuses = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled']
