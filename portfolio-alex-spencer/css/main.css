@@ -1,0 +1,452 @@
+/* ========================================
+   PORTFOLIO ALEX SPENCER - MAIN CSS
+   Variables, Reset, Typography, Base Styles
+   ======================================== */
+
+/* ========================================
+   1. CSS CUSTOM PROPERTIES
+   ======================================== */
+
+:root {
+  /* Couleurs principales */
+  --color-primary: #33323D;
+  --color-secondary: #FAFAFA;
+  --color-accent: #5FB4A2;
+  --color-text: #33323D;
+  --color-text-light: #828282;
+  --color-error: #F43030;
+  --color-white: #FFFFFF;
+  --color-divider: #E0E0E0;
+  
+  /* Typographie */
+  --font-primary: 'Ibarra Real Nova', serif;
+  --font-secondary: 'Public Sans', sans-serif;
+  
+  /* Tailles de police */
+  --font-size-xs: 0.8125rem;    /* 13px */
+  --font-size-sm: 0.9375rem;    /* 15px */
+  --font-size-base: 1rem;       /* 16px */
+  --font-size-lg: 1.125rem;     /* 18px */
+  --font-size-xl: 2rem;         /* 32px */
+  --font-size-2xl: 2.5rem;      /* 40px */
+  --font-size-3xl: 3.125rem;    /* 50px */
+  
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+  
+  /* Espacements */
+  --spacing-xs: 0.5rem;    /* 8px */
+  --spacing-sm: 1rem;      /* 16px */
+  --spacing-md: 1.5rem;    /* 24px */
+  --spacing-lg: 2rem;      /* 32px */
+  --spacing-xl: 3rem;      /* 48px */
+  --spacing-2xl: 4rem;     /* 64px */
+  --spacing-3xl: 5rem;     /* 80px */
+  --spacing-4xl: 7rem;     /* 112px */
+  
+  /* Container */
+  --container-max-width: 1110px;
+  --container-padding: 2rem;
+  --container-padding-mobile: 1.5rem;
+  
+  /* Breakpoints (référence, non utilisables en CSS) */
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1110px;
+  
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.15);
+  
+  /* Z-index layers */
+  --z-index-dropdown: 100;
+  --z-index-sticky: 200;
+  --z-index-modal: 300;
+}
+
+
+/* ========================================
+   2. MODERN CSS RESET
+   ======================================== */
+
+/* Box sizing normalization */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin and padding */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent font size inflation */
+html {
+  -moz-text-size-adjust: none;
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  scroll-behavior: smooth;
+}
+
+/* Remove default list styles */
+ul,
+ol {
+  list-style: none;
+}
+
+/* Core body defaults */
+body {
+  min-height: 100vh;
+  line-height: var(--line-height-normal);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  color: var(--color-text);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Improve media defaults */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Remove default button styles */
+button {
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove default link underline */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Avoid text overflows */
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* Create a root stacking context */
+#root,
+#__next {
+  isolation: isolate;
+}
+
+
+/* ========================================
+   3. TYPOGRAPHY
+   ======================================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-primary);
+  font-weight: 700;
+  line-height: var(--line-height-tight);
+  color: var(--color-primary);
+}
+
+h1 {
+  font-size: 2.5rem; /* 40px mobile */
+  letter-spacing: -0.36px;
+  margin-bottom: var(--spacing-lg);
+}
+
+h2 {
+  font-size: 2rem; /* 32px mobile */
+  letter-spacing: -0.29px;
+  margin-bottom: var(--spacing-md);
+}
+
+h3 {
+  font-size: 1.5rem; /* 24px */
+  letter-spacing: -0.21px;
+  margin-bottom: var(--spacing-sm);
+}
+
+p {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-light);
+  margin-bottom: var(--spacing-md);
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+/* Desktop typography adjustments */
+@media (min-width: 1110px) {
+  h1 {
+    font-size: var(--font-size-3xl); /* 50px */
+  }
+  
+  h2 {
+    font-size: var(--font-size-2xl); /* 40px */
+  }
+}
+
+
+/* ========================================
+   4. LAYOUT UTILITIES
+   ======================================== */
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: 0 var(--container-padding-mobile);
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 var(--container-padding);
+  }
+}
+
+/* Section spacing */
+.section {
+  padding: var(--spacing-3xl) 0;
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: var(--spacing-4xl) 0;
+  }
+}
+
+/* Divider */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-divider);
+  border: none;
+  margin: var(--spacing-xl) 0;
+}
+
+
+/* ========================================
+   5. ACCESSIBILITY
+   ======================================== */
+
+/* Skip to main content link */
+.skip-to-main {
+  position: absolute;
+  top: -100%;
+  left: 0;
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  padding: var(--spacing-sm) var(--spacing-md);
+  z-index: 1000;
+  transition: top var(--transition-normal);
+}
+
+.skip-to-main:focus {
+  top: 0;
+}
+
+/* Focus visible styles */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+/* Remove outline for mouse users */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+
+/* ========================================
+   6. UTILITY CLASSES
+   ======================================== */
+
+/* Text alignment */
+.text-center {
+  text-align: center;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Display utilities */
+.d-block {
+  display: block;
+}
+
+.d-none {
+  display: none;
+}
+
+.d-flex {
+  display: flex;
+}
+
+/* Spacing utilities */
+.mt-auto {
+  margin-top: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+/* Visibility utilities */
+.hidden-mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .hidden-mobile {
+    display: block;
+  }
+  
+  .hidden-desktop {
+    display: none;
+  }
+}
+
+
+/* ========================================
+   7. ANIMATIONS
+   ======================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* ========================================
+   8. PRINT STYLES
+   ======================================== */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+  
+  img {
+    page-break-inside: avoid;
+  }
+  
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+  
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
