@@ -259,7 +259,7 @@ p:last-child {
   height: 1px;
   background-color: var(--color-divider);
   border: none;
-  margin: var(--spacing-xl) 0;
+  margin: 0;
 }
 
 
